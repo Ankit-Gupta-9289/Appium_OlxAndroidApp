@@ -182,16 +182,8 @@ public class WriteXMLFile extends TestData {
 		if(!executiontype.equalsIgnoreCase("${executiontype}"))
 			Execution_Type = executiontype.trim();
 
-		if(!networktype.equalsIgnoreCase("${networktype}"))
-			Network_Type = networktype.trim();
-		
-		if(!numberofreadings.equalsIgnoreCase("${numberofreadings}"))
-			NumberOfReadings = numberofreadings.trim();
-
 		System.out.println("TestorLive = " + TestorLive);
 		System.out.println("ExecutionType = " + Execution_Type);
-		System.out.println("NetworkType = " + Network_Type);
-		System.out.println("NumberOfReadings = " + NumberOfReadings);
 
 		try {
 			File configfile = new File("Config.properties");
@@ -205,19 +197,6 @@ public class WriteXMLFile extends TestData {
 			bufferWritter.newLine();
 			bufferWritter.close();
 			fileWritter.close();		
-
-			/*
-            Properties props = new Properties();
-            FileInputStream fis = new FileInputStream(configfile);
-			FileOutputStream fos = new FileOutputStream(configfile);
-			props.load(fis);
-			props.put(key, value)
-			props.setProperty("TestorLive", TestorLive);
-			props.setProperty("Execution_Type", Execution_Type);
-			props.setProperty("Driver_Type",Driver_Type);
-			props.store(fos, "Properties File generated through ANT build.xml");
-			fis.close();
-			fos.close();*/
 
 		} catch (Exception e) {
 			System.out.println("Failed to Generate Config.Properties!!");

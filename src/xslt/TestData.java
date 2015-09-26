@@ -10,8 +10,6 @@ public class TestData{
 	
 	public static String TestorLive = "Live";
 	public static String Execution_Type = "System";
-	public static String Network_Type = "";
-	public static String NumberOfReadings = "";
 	
 	public static Xslt_XlsReader globalXLS= new Xslt_XlsReader(".\\TestCaseCreation\\excelSheetRef.xls");
 	public static String xlsPath= xlsPath();
