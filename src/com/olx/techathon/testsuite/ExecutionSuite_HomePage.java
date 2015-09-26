@@ -11,8 +11,7 @@ public class ExecutionSuite_HomePage extends Utils{
 	@Test
 	public void Validate_Visibility_Categories_HomePage(){
 		Click_Element(HomePage.Hamburger_Btn);
-		WaitUntil(HomePage.SubmitaFreeAd_Btn);
-		Assert.assertTrue(isVisible(HomePage.ListView_HomePage_LV),"HomePage Not Opening Properly!!");
+		Assert.assertTrue(isVisible(HomePage.SubmitaFreeAd_Btn),"HomePage Not Opening Properly!!");
 	}
 
 }

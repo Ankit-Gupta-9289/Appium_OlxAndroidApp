@@ -88,14 +88,7 @@ public class SubmitaFreeAdPage {
 	
 	public void Select_Location_DD(String Value){
 		driver.findElement(Location_LL).findElement(Location_DD).click();
-		List<WebElement> we = driver.findElements(Categorylist_LV);
-
-		for (WebElement webElement : we) {
-			if(webElement.getText().equals(Value)){
-				webElement.click();
-				break;
-			}
-		}
+		driver.findElement(By.xpath("//android.widget.TextView[@text = '"+Value+"']")).click();
 	}
 
 	public void Fill_Description_Txt(String Value){
