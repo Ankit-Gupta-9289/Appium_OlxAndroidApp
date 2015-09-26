@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="run">
+	<basename file="${basedir}" property="ant.project.name" />
+	<property environment="env" />
+	<property value="${env.Common_Resources}" name="Common_Resources" />
+	<property value="${env.NaukriIndia_APK_Path}" name="Apk_Path" />
+	
+	<property name="classes.dir" value="build" />
+	<property name="report.dir" value="test-output" />
+	<property name="logs.dir" value="logs" />
+	<property name="browser"
+		value="${Common_Resources}/MozillaVersions/Mozilla Firefox18/firefox.exe" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.7" />
+	<property name="source" value="1.7" />
+	<path id="olx.classpath">
+		<pathelement location="build" />
+		<pathelement location="${Common_Resources}/jars/commons-logging-1.1.jar" />
+		<pathelement location="${Common_Resources}/jars/dom4j-s1.6.1.jar" />
+		<pathelement location="${Common_Resources}/jars/java-client-2.1.0.jar" />
+		<pathelement location="${Common_Resources}/jars/jsch-0.1.49.jar" />
+		<pathelement location="${Common_Resources}/jars/jxl.jar" />
+		<pathelement location="${Common_Resources}/jars/log4j-1.2.13.jar" />
+		<pathelement location="${Common_Resources}/jars/mysql-connector-java-5.1.22-bin.jar" />
+		<pathelement location="${Common_Resources}/jars/poi-3.8-beta5-20111217.jar" />
+		<pathelement location="${Common_Resources}/jars/poi-examples-3.8-beta5-20111217.jar" />
+		<pathelement location="${Common_Resources}/jars/poi-excelant-3.8-beta5-20111217.jar" />
+		<pathelement location="${Common_Resources}/jars/poi-ooxml-3.8-beta5-20111217.jar" />
+		<pathelement location="${Common_Resources}/jars/poi-ooxml-schemas-3.8-beta5-20111217.jar" />
+		<pathelement location="${Common_Resources}/jars/poi-scratchpad-3.8-beta5-20111217.jar" />
+		<pathelement location="${Common_Resources}/jars/polidea_test_runner_1.1.jar" />
+		<pathelement location="${Common_Resources}/jars/selenium-android-driver-2.21.0.jar" />
+		<pathelement location="${Common_Resources}/jars/selenium-server-standalone-2.44.0.jar" />
+		<pathelement location="${Common_Resources}/jars/testng-6.8.jar" />
+		<pathelement location="${Common_Resources}/jars/uiautomator.jar" />
+		<pathelement location="${Common_Resources}/jars/xmlbeans-2.3.0.jar" />
+		<pathelement location="${Common_Resources}/jars/selenium-java-2.42.2.jar" />
+		<pathelement location="${Common_Resources}/jars/stax-api-1.0.1.jar" />
+		<pathelement location="${Common_Resources}/jars/generic-android-1.0.4.jar" /> 
+		<pathelement location="${Common_Resources}/jars/saxon-9.1.0.8.jar" />
+		<pathelement location="${Common_Resources}/jars/SaxonLiaison.jar" />
+		 <pathelement location="${Common_Resources}/jars/xslt_android.jar" /> 
+	</path>
+	<path id="classes">
+		<pathelement location="build" />
+	</path>
+
+	<!-- -->
+	
+	<target name="run">
+	    <echo message= "Common Resources Path == ${Common_Resources}" />
+	    <antcall target="ClearScrap"/>
+	  	<record name="./finalReport/logs/logfile_${timestamp}.txt" action="start" append="false" />
+		<antcall target="build" />
+		<antcall target="createXML" />
+		<antcall target="finalReport" />
+		<antcall target="openReport" />
+		<antcall target="clean" />
+		<record name="./finalReport/logs/logfile_${timestamp}.txt" action="stop" />
+	</target>
+
+	<target name="init">
+		<delete dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<copy includeemptydirs="false" todir="${classes.dir}">
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<delete dir="${report.dir}" />
+		<mkdir dir="${report.dir}" />
+	</target>
+
+
+	<target name="clean">
+		<delete dir="${classes.dir}" />
+	</target>
+
+	<target name="build" depends="build-project" />
+	<target name="build-project" depends="init">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac target="${target}" debug="true" debuglevel="${debuglevel}"
+			destdir="${classes.dir}" includeantruntime="false" source="${source}"
+			srcdir="src">
+			<src path="src" />
+			<classpath refid="olx.classpath" />
+		</javac>
+	</target>
+
+	<target
+		description="Build all projects which reference this project. Useful to propagate changes."
+		name="build-refprojects" />
+
+
+	<!--Define <testng> task -->
+	<taskdef name="testng" classname="org.testng.TestNGAntTask">
+		<classpath>
+			<pathelement location="${Common_Resources}/jars/testng-6.8.jar" />
+		</classpath>
+	</taskdef>
+
+	<!--Directory Name where the reports will be saved -->
+	<property name="testng.output.dir" value="testng_output" />
+	
+	
+	
+	<!-- Take Backup for the present Project executed -->
+	<target name="backupPreProject">
+		<mkdir dir="../${ant.project.name}_Old_Reports/Execution_${timestamp}/finalReport" />
+		<mkdir dir="../${ant.project.name}_Old_Reports/Execution_${timestamp}/TestDataSheets" />
+
+		<copy todir="../${ant.project.name}_Old_Reports/Execution_${timestamp}/finalReport">
+			<fileset dir="finalReport" includes="**"/>
+		</copy>
+		
+		<copy todir="../${ant.project.name}_Old_Reports/Execution_${timestamp}/TestDataSheets">
+			<fileset dir="TestDataSheetsForExecution" includes="**"/>
+		</copy>
+			<copy todir="../${ant.project.name}_Old_Reports/Execution_${timestamp}/TestCaseResult">
+			<fileset dir="TestCaseCreation" includes="**"/>
+		</copy>
+	</target>
+	
+
+	<!-- Copy Test Data Sheets -->
+	<target name="CopyTestDataSheet">
+		<mkdir dir="TestDataSheetsForExecution" />
+		<delete dir="TestDataSheetsForExecution" />
+		<copy todir="TestDataSheetsForExecution">
+			<fileset dir="TestDataSheets_Blank" />
+		</copy>
+	</target>
+
+	
+	
+	<target name="SetTypeofExecution">
+		<mkdir dir="TestCaseCreation" />
+		<delete dir="TestCaseCreation" />
+		<copy todir="TestCaseCreation">
+			<fileset dir="TestCaseCreation_${executiontype}" />
+		</copy>
+	</target>
+	
+	
+	<!-- Copy Test Case Creation Sheets -->
+	<target name="CopyTestCaseCreationSheet">
+		<mkdir dir="TestCaseCreation" />
+		<delete dir="TestCaseCreation" />
+		<copy todir="TestCaseCreation">
+			<fileset dir="TestCaseCreation_Blank" />
+		</copy>
+	</target>
+	
+	
+	
+	<!-- Copy apk to project -->
+	<target name="Copyapks">
+	    <echo message = "Copy Apk"/>
+		<mkdir dir="apks" />
+		<copy todir="apks">
+			<fileset dir="${Apk_Path}" />
+		</copy>
+	</target>
+
+	
+	
+
+	<!-- Delete Old Scrap Report Before Starting Execution -->
+	<target name="ClearScrap">
+		<mkdir dir="./finalReport" />
+		<echo message="Delete Old Scrap Report Before Starting Execution" />
+		<delete includeemptydirs="true">
+			<fileset dir="finalReport" includes="**/*" />
+		</delete>
+		<mkdir dir="./finalReport/screenshots" />
+		<mkdir dir="./finalReport/${logs.dir}" />
+	</target>
+
+
+	 <target name="configSet">
+		<touch file="Config.properties" />
+		<copy overwrite="true" file="Config_${environment}.properties"
+			tofile="Config.properties" />
+	</target>
+	
+	<target name="createXML">
+		<java classname="xslt.WriteXMLFile" failonerror="true" fork="yes">
+		    <arg value="${environment}" />
+		       <arg value="${executiontype}" />
+		          <arg value="${networktype}" />
+		             <arg value="${numberofreadings}" />
+			<classpath refid="olx.classpath" />
+		</java>
+	</target>
+
+	<target name="ModifyXML" depends="runTests">
+		<java classname="xslt.ModifyNGXML" failonerror="true" fork="yes">
+			<classpath refid="olx.classpath" />
+		</java>
+	</target>
+
+	<target name="runTests">
+		<taskdef resource="testngtasks" classpathref="olx.classpath" />
+		<testng outputDir="${report.dir}" haltonfailure="false"
+			classpathref="olx.classpath" configFailurePolicy="continue">
+			<xmlfileset dir="${basedir}" includes="testng.xml" />
+			<!-- <classfileset dir="${classes.dir}" includes="**/*.class" /> -->
+		</testng>
+	</target>
+
+
+	<target name="finalReport" depends="ModifyXML">
+		<mkdir dir="finalReport" /> 
+		<xslt in="${report.dir}/testng-results.xml" style="src/xslt/testng-results.xsl"
+			out="finalReport/index.html" processor="SaxonLiaison">
+			<param name="testNgXslt.outputDir" expression="${basedir}/finalReport" />
+			<param name="testNgXslt.environment" expression="${environment}" />
+			<param name="testNgXslt.executiontype" expression="${executiontype}" />
+			<param name="testNgXslt.networktype" expression="${networktype}" />
+			<param name="testNgXslt.numberofreadings" expression="${numberofreadings}" />
+			<param name="testNgXslt.tagid" expression="${tagid}" />
+			<param name="testNgXslt.testDetailsFilter" expression="FAIL,SKIP,PASS,BY_CLASS,DESCRIPTION" />
+			<param name="testNgXslt.showRuntimeTotals" expression="true" />
+			<classpath refid="olx.classpath" />
+		</xslt>
+		<!--delete dir="${report.dir}"/ -->
+	</target>
+
+	<target name="openReport">
+		<exec executable="${browser}" spawn="yes">
+			<arg line="finalReport/index.html" />
+		</exec>
+	</target>
+
+	<tstamp>
+		<format property="timestamp" pattern="dd-MM-yyyy_HH-mm-ss" />
+	</tstamp>
+
+
+</project>

@@ -46,11 +46,11 @@ public class Utils implements Constants{
     public AndroidDriver StartDriverAndroidApp(String appLocation, String appPackage) throws MalformedURLException{
 
 
-         /* try {
+          try {
                 startAppiumServer();
           } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
-          }*/
+          }
 
           try{Thread.sleep(5000);}catch(Exception e){}
 
@@ -125,11 +125,11 @@ public class Utils implements Constants{
 
           driver.quit();
 
-         /* try {
+          try {
                 stopAppiumServer();
           } catch (IOException e) {
                 e.printStackTrace();
-          }*/
+          }
 
           return("----->>> Browser closed");
     }
@@ -153,6 +153,9 @@ public class Utils implements Constants{
     	else 
     		return false;
     }
-
+    
+    public void HideKeyboard(){
+    	driver.hideKeyboard();
+    }
 
 }
