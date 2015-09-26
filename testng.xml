@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><suite name="OlxTechathon" parallel="tests" thread-count="1"><listeners><listener class-name="xslt.TakeScreenshot"/><listener class-name="xslt.TestNGError"/></listeners></suite>

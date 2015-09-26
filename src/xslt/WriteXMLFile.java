@@ -202,9 +202,6 @@ public class WriteXMLFile extends TestData {
 			bufferWritter.newLine();
 			bufferWritter.append("Execution_Type=" + Execution_Type);
 			bufferWritter.newLine();
-			bufferWritter.append("Network_Type=" + Network_Type);
-			bufferWritter.newLine();
-			bufferWritter.append("NumberOfReadings=" + NumberOfReadings);
 			bufferWritter.newLine();
 			bufferWritter.close();
 			fileWritter.close();		
